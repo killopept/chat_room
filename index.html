@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon"  href="icon.jpg" >
+  <title>Chat Room</title>
+</head>
+<body>
+  <input type="text" id="input"/>
+  <div type="button" id="send" style="display: inline-block;">Send!</div>
+  <div id="content"></div>
+  <script>
+    (function() {
+    //  var ws = new WebSocket("ws://127.0.0.1:8181");
+      console.log(location.host)
+      var ws = new WebSocket(`ws://${location.hostname}:5501`);
+      ws.onopen = function (e) {
+          console.log('Connection to server opened');
+      }
+      document.getElementById('send').onclick = function() {
+          console.log(document.getElementById('input').value)
+          ws.send(document.getElementById('input').value);
+          document.getElementById('input').value = ''
+      } 
+      ws.onmessage = function(event) {
+        console.log(event)
+        var newEl = document.createElement('div')
+
+        newEl.innerHTML = 
+
+        `<h2>A1:<span style="color:red">${event.data}</span></h2>`
+        document.getElementById('content').append(newEl)
+      }
+    })()
+  </script>
+  
+</body>
+</html>
