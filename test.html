@@ -19,18 +19,24 @@
       ws.onopen = function (e) {
           console.log('Connection to server opened');
       }
+      // var newEl = document.createElement('div')
       document.getElementById('send').onclick = function() {
-          // console.log(document.getElementById('input').value)
+          var newEl = document.createElement('div')
+          console.log(document.getElementById('input').value)
           ws.send(document.getElementById('input').value);
+          newEl.innerHTML = 
+
+          `<h2>A2:<span style="color:blue">${document.getElementById('input').value}</span></h2>`
+          document.getElementById('content').append(newEl)
           document.getElementById('input').value = ''
       } 
       ws.onmessage = function(event) {
-        // console.log(event)
+        console.log(event)
         var newEl = document.createElement('div')
 
         newEl.innerHTML = 
 
-        `<h2>A1:<span style="color:red">${event.data}</span></h2>`
+        `<h2>A:<span style="color:red">${event.data}</span></h2>`
         document.getElementById('content').append(newEl)
       }
     })()

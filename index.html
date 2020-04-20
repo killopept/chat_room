@@ -8,7 +8,11 @@
   <title>Chat Room</title>
 </head>
 <body>
-  <input type="text" id="input"/>
+  userName<input type="text" id="userName"/>
+  <button id="confirm">confirm</button>
+  <br>
+  <br>
+  <textarea type="textarea" id="input"></textarea>
   <div type="button" id="send" style="display: inline-block;">Send!</div>
   <div id="content"></div>
   <script>
@@ -17,21 +21,39 @@
       console.log(location.host)
       var ws = new WebSocket(`ws://${location.hostname}:5501`);
       ws.onopen = function (e) {
-          console.log('Connection to server opened');
+        console.log('Connection to server opened');
       }
-      document.getElementById('send').onclick = function() {
+      
+      
+      document.getElementById('confirm').onclick=function(){
+        document.getElementById('userName').disabled = true
+      }
+     
+      // var newEl = document.createElement('div')
+      document.getElementById('send').onclick = () =>{
+          var newEl = document.createElement('div')
           console.log(document.getElementById('input').value)
-          ws.send(document.getElementById('input').value);
+          ws.send(JSON.stringify({
+            userName: document.getElementById('userName').value,
+            content:document.getElementById('input').value
+          }));
+          newEl.innerHTML = 
+
+          `<h2>${document.getElementById('userName').value}:<span style="color:blue">${document.getElementById('input').value}</span></h2>`
+          document.getElementById('content').append(newEl)
           document.getElementById('input').value = ''
       } 
-      ws.onmessage = function(event) {
+      ws.onmessage = event => {
         console.log(event)
-        var newEl = document.createElement('div')
+        var recept = JSON.parse(event.data)
+        if(recept.userName != document.getElementById('userName').value) {
+          var newEl = document.createElement('div')
 
-        newEl.innerHTML = 
+          newEl.innerHTML = 
 
-        `<h2>A1:<span style="color:red">${event.data}</span></h2>`
-        document.getElementById('content').append(newEl)
+          `<h2>${recept.userName}:<span style="color:red">${recept.content}</span></h2>`
+          document.getElementById('content').append(newEl)
+        }
       }
     })()
   </script>
